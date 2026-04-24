@@ -1,0 +1,68 @@
+name: Deploy Frontend + Admin
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 🔹 FRONTEND
+      - name: Install frontend deps
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+          npm run export
+
+      # 🔹 ADMIN
+      - name: Install admin deps
+        run: |
+          cd admin
+          npm install
+
+      - name: Build admin
+        run: |
+          cd admin
+          npm run build
+          npm run export
+
+      # 🔹 MERGE OUTPUT
+      - name: Prepare public folder
+        run: |
+          mkdir public
+          cp -r frontend/out/* public/
+          mkdir public/admin
+          cp -r admin/out/* public/admin/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        uses: actions/deploy-pages@v5
