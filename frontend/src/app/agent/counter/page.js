@@ -40,7 +40,7 @@ export default function CounterBooking() {
     setAgentData(agent);
 
     // Fetch vehicles
-    axios.get('http://localhost:5000/api/vehicles')
+    axios.get('https://cartaxi-backend.onrender.com/api/vehicles')
       .then(res => {
         setVehicles(res.data);
         if (res.data.length > 0) {
@@ -65,7 +65,7 @@ export default function CounterBooking() {
 
     try {
       const token = Cookies.get('agent_token');
-      const res = await axios.post('http://localhost:5000/api/bookings', formData, {
+      const res = await axios.post('https://cartaxi-backend.onrender.com/api/bookings', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const saved = res.data;
@@ -178,7 +178,7 @@ export default function CounterBooking() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-secondary)' }}>
       <Navbar />
-      
+
       <div className="container" style={{ padding: '2rem 0' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>Counter Booking</h1>
@@ -189,7 +189,7 @@ export default function CounterBooking() {
 
         <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
           {message && <div style={{ padding: '1rem', marginBottom: '1.5rem', backgroundColor: message.includes('success') ? '#dcfce7' : '#fee2e2', color: message.includes('success') ? '#166534' : '#991b1b', borderRadius: '0.5rem', textAlign: 'center' }}>{message}</div>}
-          
+
           <form onSubmit={handleSubmit} id="booking-form">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div className="form-group">
@@ -214,7 +214,7 @@ export default function CounterBooking() {
                   <input type="number" name="numberOfFemales" className="form-control" value={formData.numberOfFemales} onChange={handleChange} required min="0" />
                 </div>
               </div>
-              
+
               <div className="form-group">
                 <label>Select Vehicle</label>
                 <select name="vehicleId" className="form-control" value={formData.vehicleId} onChange={handleChange} required>

@@ -22,7 +22,7 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const url = `http://localhost:5000/api/auth/${isSignup ? 'admin/signup' : 'admin/login'}`;
+      const url = `https://cartaxi-backend.onrender.com/api/auth/${isSignup ? 'admin/signup' : 'admin/login'}`;
       const res = await axios.post(url, formData);
       Cookies.set('admin_token', res.data.token, { expires: 1 });
       Cookies.set('admin_data', JSON.stringify(res.data.admin), { expires: 1 });

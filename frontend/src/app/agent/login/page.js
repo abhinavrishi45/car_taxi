@@ -23,7 +23,7 @@ export default function AgentLogin() {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/agent/login', formData);
+      const res = await axios.post('https://cartaxi-backend.onrender.com/api/auth/agent/login', formData);
       Cookies.set('agent_token', res.data.token, { expires: 1 });
       Cookies.set('agent_data', JSON.stringify(res.data.agent), { expires: 1 });
       window.location.href = '/agent/counter'; // Full reload to update navbar state
@@ -41,7 +41,7 @@ export default function AgentLogin() {
         <div className="card" style={{ maxWidth: '400px', width: '100%' }}>
           <h2 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '1.5rem', textAlign: 'center' }}>Agent Login</h2>
           {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center', backgroundColor: '#fee2e2', padding: '0.5rem', borderRadius: '0.25rem' }}>{error}</div>}
-          
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Username</label>

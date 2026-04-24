@@ -29,12 +29,12 @@ export default function AgentSignup() {
       setError("Passwords do not match");
       return;
     }
-    
+
     setLoading(true);
     setError('');
 
     try {
-      await axios.post('http://localhost:5000/api/auth/agent/signup', {
+      await axios.post('https://cartaxi-backend.onrender.com/api/auth/agent/signup', {
         airportName: formData.airportName,
         username: formData.username,
         email: formData.email,
@@ -56,7 +56,7 @@ export default function AgentSignup() {
         <div className="card" style={{ maxWidth: '500px', width: '100%', margin: '2rem 0' }}>
           <h2 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '1.5rem', textAlign: 'center' }}>Agent Signup</h2>
           {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center', backgroundColor: '#fee2e2', padding: '0.5rem', borderRadius: '0.25rem' }}>{error}</div>}
-          
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Airport Name</label>

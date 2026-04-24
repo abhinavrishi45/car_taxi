@@ -13,7 +13,7 @@ export default function BookingsPage() {
   const fetchBookings = async () => {
     try {
       const token = Cookies.get('admin_token');
-      const res = await axios.get('http://localhost:5000/api/bookings', {
+      const res = await axios.get('https://cartaxi-backend.onrender.com/api/bookings', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(res.data);
@@ -28,20 +28,20 @@ export default function BookingsPage() {
     fetchBookings();
   }, []);
 
-  const filteredBookings = filterDate 
+  const filteredBookings = filterDate
     ? bookings.filter(b => b.date.startsWith(filterDate))
     : bookings;
 
   return (
     <div>
       <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem' }}>All Bookings</h1>
-      
+
       <div className="card" style={{ marginBottom: '2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <label style={{ fontWeight: 500 }}>Filter by Date:</label>
-          <input 
-            type="date" 
-            className="form-control" 
+          <input
+            type="date"
+            className="form-control"
             style={{ width: 'auto' }}
             value={filterDate}
             onChange={(e) => setFilterDate(e.target.value)}
@@ -68,12 +68,12 @@ export default function BookingsPage() {
               {filteredBookings.map(b => (
                 <tr key={b._id}>
                   <td>{format(new Date(b.date), 'dd MMM yyyy, HH:mm')}</td>
-                  <td>{b.passengerName} <br/><small>{b.numberOfPersons} pax</small></td>
+                  <td>{b.passengerName} <br /><small>{b.numberOfPersons} pax</small></td>
                   <td>{b.mobileNumber}</td>
                   <td>{b.fromAirport} ➡️ {b.toDestination}</td>
                   <td>{b.vehicleId?.name} ({b.vehicleId?.type})</td>
-                  <td>₹{b.manualFarePrice} <br/><small>{b.paymentMode.replace('_', ' ')}</small></td>
-                  <td>{b.agentId?.airportName} <br/><small>{b.agentId?.username}</small></td>
+                  <td>₹{b.manualFarePrice} <br /><small>{b.paymentMode.replace('_', ' ')}</small></td>
+                  <td>{b.agentId?.airportName} <br /><small>{b.agentId?.username}</small></td>
                 </tr>
               ))}
               {filteredBookings.length === 0 && <tr><td colSpan="7" style={{ textAlign: 'center' }}>No bookings found</td></tr>}

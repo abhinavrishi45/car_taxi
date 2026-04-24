@@ -13,7 +13,7 @@ export default function VehiclesPage() {
   const fetchVehicles = async () => {
     try {
       const token = Cookies.get('admin_token');
-      const res = await axios.get('http://localhost:5000/api/vehicles/all', {
+      const res = await axios.get('https://cartaxi-backend.onrender.com/api/vehicles/all', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setVehicles(res.data);
@@ -32,7 +32,7 @@ export default function VehiclesPage() {
     e.preventDefault();
     try {
       const token = Cookies.get('admin_token');
-      await axios.post('http://localhost:5000/api/vehicles', formData, {
+      await axios.post('https://cartaxi-backend.onrender.com/api/vehicles', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFormData({ name: '', type: '' });
@@ -46,7 +46,7 @@ export default function VehiclesPage() {
     if (!confirm('Are you sure you want to deactivate this vehicle?')) return;
     try {
       const token = Cookies.get('admin_token');
-      await axios.delete(`http://localhost:5000/api/vehicles/${id}`, {
+      await axios.delete(`https://cartaxi-backend.onrender.com/api/vehicles/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchVehicles();
@@ -58,7 +58,7 @@ export default function VehiclesPage() {
   return (
     <div>
       <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem' }}>Vehicles Management</h1>
-      
+
       <div className="card" style={{ marginBottom: '2rem' }}>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Add New Vehicle</h2>
         {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}

@@ -25,7 +25,7 @@ export default function Home() {
     // otherwise continue with hero animations
     const ctx = gsap.context(() => {
       // Hero Animation
-      gsap.fromTo(textRef.current.children, 
+      gsap.fromTo(textRef.current.children,
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.8, stagger: 0.2, ease: "power3.out" }
       );
@@ -69,11 +69,11 @@ export default function Home() {
   return (
     <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
-      
+
       <section ref={heroRef} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem', textAlign: 'center', background: 'radial-gradient(circle at center, var(--bg-secondary) 0%, var(--bg-color) 100%)' }}>
         <div ref={textRef} style={{ maxWidth: '800px', marginBottom: '4rem' }}>
           <h1 style={{ fontSize: '4rem', fontWeight: 700, marginBottom: '1.5rem', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-            Premium Airport Transfers <br/> <span style={{ color: 'var(--primary-color)' }}>Simplified</span>
+            Premium Airport Transfers <br /> <span style={{ color: 'var(--primary-color)' }}>Simplified</span>
           </h1>
           <p style={{ fontSize: '1.25rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
             Seamlessly connect passengers to their destinations. Cartaxi provides agents with an intuitive platform to book, manage, and track airport rides.
