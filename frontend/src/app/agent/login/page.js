@@ -26,7 +26,8 @@ export default function AgentLogin() {
       const res = await axios.post('https://cartaxi-backend.onrender.com/api/auth/agent/login', formData);
       Cookies.set('agent_token', res.data.token, { expires: 1 });
       Cookies.set('agent_data', JSON.stringify(res.data.agent), { expires: 1 });
-      window.location.href = '/agent/counter'; // Full reload to update navbar state
+      // window.location.href = '/agent/counter'; // Full reload to update navbar state
+      router.push('/agent/counter');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
