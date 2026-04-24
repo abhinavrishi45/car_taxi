@@ -3,11 +3,16 @@ name: Deploy Frontend + Admin
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -28,11 +33,10 @@ jobs:
           cd frontend
           npm install
 
-      - name: Build frontend
+      - name: Build frontend (static export)
         run: |
           cd frontend
           npm run build
-          npm run export
 
       # 🔹 ADMIN
       - name: Install admin deps
@@ -40,13 +44,12 @@ jobs:
           cd admin
           npm install
 
-      - name: Build admin
+      - name: Build admin (static export)
         run: |
           cd admin
           npm run build
-          npm run export
 
-      # 🔹 MERGE OUTPUT
+      # 🔹 MERGE OUTPUTS
       - name: Prepare public folder
         run: |
           mkdir public
@@ -63,6 +66,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: Deploy
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v5
