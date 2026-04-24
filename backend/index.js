@@ -9,7 +9,16 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
+
+app.use(
+  cors({
+    origin: "https://abhinavrishi45.github.io",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // // Routes (to be imported later)
