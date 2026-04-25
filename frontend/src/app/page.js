@@ -79,8 +79,8 @@ export default function Home() {
             Seamlessly connect passengers to their destinations. Cartaxi provides agents with an intuitive platform to book, manage, and track airport rides.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <Link href="/agent/signup" className="btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
-              Become an Agent
+            <Link href="/admin/login" className="btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
+              Contact Admin
             </Link>
             <Link href="/agent/login" className="btn-outline" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
               Login to Dashboard

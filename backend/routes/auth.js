@@ -2,26 +2,16 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const Agent = require('../models/Agent');
 const Admin = require('../models/Admin');
+const auth = require('../middleware/auth');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
-// Agent Signup
+// Agent Signup - Disabled (agents are created by admins)
 router.post('/agent/signup', async (req, res) => {
-  try {
-    const { airportName, username, email, password, location } = req.body;
-    const existingAgent = await Agent.findOne({ $or: [{ email }, { username }] });
-    if (existingAgent) return res.status(400).json({ message: 'Agent already exists' });
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newAgent = new Agent({ airportName, username, email, password: hashedPassword, location });
-    await newAgent.save();
-
-    res.status(201).json({ message: 'Agent created successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  return res.status(403).json({ message: 'Agent signup is disabled. Admins must create agent accounts.' });
 });
 
 // Agent Login
@@ -81,6 +71,33 @@ router.post('/admin/login', async (req, res) => {
 
     const token = jwt.sign({ id: admin._id, role: 'admin' }, JWT_SECRET, { expiresIn: '1d' });
     res.json({ token, admin: { id: admin._id, username: admin.username } });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin: Create Agent (admin-only)
+router.post('/admin/agents', auth, async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
+
+    const { airportName, username, email, location } = req.body;
+    if (!airportName || !username || !email || !location) return res.status(400).json({ message: 'Missing required fields' });
+
+    const existingAgent = await Agent.findOne({ $or: [{ email }, { username }] });
+    if (existingAgent) return res.status(400).json({ message: 'Agent already exists' });
+
+    const plainPassword = crypto.randomBytes(5).toString('hex'); // 10 hex chars
+    const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+    const newAgent = new Agent({ airportName, username, email, password: hashedPassword, location });
+    await newAgent.save();
+
+    res.status(201).json({
+      message: 'Agent created successfully',
+      agent: { id: newAgent._id, username: newAgent.username, email: newAgent.email, airportName: newAgent.airportName },
+      password: plainPassword
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

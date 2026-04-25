@@ -31,6 +31,7 @@ export default function DashboardLayout({ children }) {
     { name: 'Vehicles', path: '/dashboard/vehicles' },
     { name: 'Bookings', path: '/dashboard/bookings' },
     { name: 'Counters', path: '/dashboard/counters' },
+    { name: 'Agents', path: '/dashboard/agents' },
   ];
 
   return (

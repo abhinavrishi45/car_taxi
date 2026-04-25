@@ -57,7 +57,7 @@ export default function AgentLogin() {
             </button>
           </form>
           <div style={{ marginTop: '1.5rem', textAlign: 'center', color: 'var(--text-muted)' }}>
-            Don't have an account? <Link href="/agent/signup" style={{ color: 'var(--primary-color)' }}>Sign up</Link>
+            Accounts are created by admins. Please contact your administrator for credentials.
           </div>
         </div>
       </div>

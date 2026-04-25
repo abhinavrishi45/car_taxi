@@ -158,7 +158,6 @@ export default function Navbar() {
         ) : (
           <>
             <Link href="/agent/login" className="btn-outline" style={{ padding: '0.5rem 1rem' }}>Agent Login</Link>
-            <Link href="/agent/signup" className="btn-primary" style={{ padding: '0.5rem 1rem' }}>Sign Up</Link>
           </>
         )}
       </div>
