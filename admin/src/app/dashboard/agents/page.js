@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 export default function AgentsPage() {
-  const [formData, setFormData] = useState({ airportName: '', username: '', email: '', location: '' });
+  const [formData, setFormData] = useState({ airportName: '', username: '', email: '', location: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
@@ -20,8 +20,10 @@ export default function AgentsPage() {
       const res = await axios.post('https://cartaxi-backend.onrender.com/api/auth/admin/agents', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setResult({ success: true, data: res.data });
-      setFormData({ airportName: '', username: '', email: '', location: '' });
+      // keep the provided password to show to admin after creation
+      const providedPassword = formData.password;
+      setResult({ success: true, data: res.data, password: providedPassword });
+      setFormData({ airportName: '', username: '', email: '', location: '', password: '' });
     } catch (err) {
       setResult({ success: false, message: err.response?.data?.message || 'Failed to create agent' });
     } finally {
@@ -55,6 +57,11 @@ export default function AgentsPage() {
             <input name="location" value={formData.location} onChange={handleChange} className="form-control" required />
           </div>
 
+          <div className="form-group">
+            <label>Password</label>
+            <input name="password" value={formData.password} onChange={handleChange} className="form-control" type="password" required />
+          </div>
+
           <button type="submit" className="btn-primary" style={{ marginTop: '1rem' }} disabled={loading}>
             {loading ? 'Creating...' : 'Create Agent'}
           </button>
@@ -68,7 +75,7 @@ export default function AgentsPage() {
                 <div style={{ marginTop: 6 }}>Username: {result.data.agent.username}</div>
                 <div>Email: {result.data.agent.email}</div>
                 <div>Airport: {result.data.agent.airportName}</div>
-                <div style={{ marginTop: 6, fontWeight: 700 }}>Password: {result.data.password}</div>
+                <div style={{ marginTop: 6, fontWeight: 700 }}>Password: {result.password}</div>
                 <div style={{ marginTop: 8, color: '#475569' }}>Copy this password and share it securely with the agent.</div>
               </div>
             ) : (

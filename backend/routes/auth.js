@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 const Agent = require('../models/Agent');
 const Admin = require('../models/Admin');
 const auth = require('../middleware/auth');
@@ -81,22 +80,20 @@ router.post('/admin/agents', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
 
-    const { airportName, username, email, location } = req.body;
-    if (!airportName || !username || !email || !location) return res.status(400).json({ message: 'Missing required fields' });
+    const { airportName, username, email, location, password } = req.body;
+    if (!airportName || !username || !email || !location || !password) return res.status(400).json({ message: 'Missing required fields' });
 
     const existingAgent = await Agent.findOne({ $or: [{ email }, { username }] });
     if (existingAgent) return res.status(400).json({ message: 'Agent already exists' });
 
-    const plainPassword = crypto.randomBytes(5).toString('hex'); // 10 hex chars
-    const hashedPassword = await bcrypt.hash(plainPassword, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newAgent = new Agent({ airportName, username, email, password: hashedPassword, location });
     await newAgent.save();
 
     res.status(201).json({
       message: 'Agent created successfully',
-      agent: { id: newAgent._id, username: newAgent.username, email: newAgent.email, airportName: newAgent.airportName },
-      password: plainPassword
+      agent: { id: newAgent._id, username: newAgent.username, email: newAgent.email, airportName: newAgent.airportName }
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
