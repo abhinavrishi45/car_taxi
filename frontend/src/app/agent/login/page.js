@@ -23,7 +23,8 @@ export default function AgentLogin() {
     setError('');
 
     try {
-      const res = await axios.post('https://cartaxi-backend.onrender.com/api/auth/agent/login', formData);
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const res = await axios.post(`${base}/api/auth/agent/login`, formData);
       Cookies.set('agent_token', res.data.token, { expires: 1 });
       Cookies.set('agent_data', JSON.stringify(res.data.agent), { expires: 1 });
       // window.location.href = '/agent/counter'; // Full reload to update navbar state

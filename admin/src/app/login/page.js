@@ -22,7 +22,8 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const url = `https://cartaxi-backend.onrender.com/api/auth/${isSignup ? 'admin/signup' : 'admin/login'}`;
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const url = `${base}/api/auth/${isSignup ? 'admin/signup' : 'admin/login'}`;
       const res = await axios.post(url, formData);
       Cookies.set('admin_token', res.data.token, { expires: 1 });
       Cookies.set('admin_data', JSON.stringify(res.data.admin), { expires: 1 });

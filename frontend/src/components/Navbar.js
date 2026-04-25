@@ -35,7 +35,8 @@ export default function Navbar() {
   const fetchBookings = async (token) => {
     setLoadingBookings(true);
     try {
-      const res = await axios.get('https://cartaxi-backend.onrender.com/api/bookings/my', {
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const res = await axios.get(`${base}/api/bookings/my`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

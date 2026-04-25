@@ -8,6 +8,7 @@ export default function AgentsPage() {
   const [formData, setFormData] = useState({ airportName: '', username: '', email: '', location: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [copySuccess, setCopySuccess] = useState('');
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -17,7 +18,8 @@ export default function AgentsPage() {
     setResult(null);
     try {
       const token = Cookies.get('admin_token');
-      const res = await axios.post('https://cartaxi-backend.onrender.com/api/auth/admin/agents', formData, {
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const res = await axios.post(`${base}/api/auth/admin/agents`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // keep the provided password to show to admin after creation
@@ -28,6 +30,19 @@ export default function AgentsPage() {
       setResult({ success: false, message: err.response?.data?.message || 'Failed to create agent' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!result || !result.data) return;
+    const text = `Username: ${result.data.agent.username}\nPassword: ${result.password}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopySuccess('Copied to clipboard');
+      setTimeout(() => setCopySuccess(''), 2000);
+    } catch (err) {
+      setCopySuccess('Copy failed');
+      setTimeout(() => setCopySuccess(''), 2000);
     }
   };
 
@@ -75,8 +90,12 @@ export default function AgentsPage() {
                 <div style={{ marginTop: 6 }}>Username: {result.data.agent.username}</div>
                 <div>Email: {result.data.agent.email}</div>
                 <div>Airport: {result.data.agent.airportName}</div>
-                <div style={{ marginTop: 6, fontWeight: 700 }}>Password: {result.password}</div>
-                <div style={{ marginTop: 8, color: '#475569' }}>Copy this password and share it securely with the agent.</div>
+                <div style={{ marginTop: 6, fontWeight: 700, display: 'flex', gap: 12, alignItems: 'center' }}>
+                  <div>Password: {result.password}</div>
+                  <button type="button" onClick={handleCopy} className="btn-outline" style={{ padding: '0.25rem 0.6rem' }}>Copy credentials</button>
+                  {copySuccess && <div style={{ marginLeft: 8, color: '#065f46', fontSize: '0.9rem' }}>{copySuccess}</div>}
+                </div>
+                <div style={{ marginTop: 8, color: '#475569' }}>Copy these credentials and share them securely with the agent.</div>
               </div>
             ) : (
               <div style={{ padding: '0.75rem', background: '#fff1f2', borderRadius: '6px', color: '#b91c1c' }}>{result.message}</div>

@@ -13,7 +13,8 @@ export default function BookingsPage() {
   const fetchBookings = async () => {
     try {
       const token = Cookies.get('admin_token');
-      const res = await axios.get('https://cartaxi-backend.onrender.com/api/bookings', {
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const res = await axios.get(`${base}/api/bookings`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(res.data);

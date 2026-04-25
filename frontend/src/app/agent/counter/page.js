@@ -40,7 +40,8 @@ export default function CounterBooking() {
     setAgentData(agent);
 
     // Fetch vehicles
-    axios.get('https://cartaxi-backend.onrender.com/api/vehicles')
+    const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+    axios.get(`${base}/api/vehicles`)
       .then(res => {
         setVehicles(res.data);
         if (res.data.length > 0) {
@@ -65,7 +66,8 @@ export default function CounterBooking() {
 
     try {
       const token = Cookies.get('agent_token');
-      const res = await axios.post('https://cartaxi-backend.onrender.com/api/bookings', formData, {
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const res = await axios.post(`${base}/api/bookings`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const saved = res.data;

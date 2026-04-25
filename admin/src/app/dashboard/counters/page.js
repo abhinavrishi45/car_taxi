@@ -11,7 +11,8 @@ export default function CountersPage() {
   const fetchCounters = async () => {
     try {
       const token = Cookies.get('admin_token');
-      const res = await axios.get('https://cartaxi-backend.onrender.com/api/counters', {
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const res = await axios.get(`${base}/api/counters`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCounters(res.data);

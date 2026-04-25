@@ -13,7 +13,8 @@ export default function VehiclesPage() {
   const fetchVehicles = async () => {
     try {
       const token = Cookies.get('admin_token');
-      const res = await axios.get('https://cartaxi-backend.onrender.com/api/vehicles/all', {
+      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+      const res = await axios.get(`${base}/api/vehicles/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setVehicles(res.data);
@@ -32,7 +33,7 @@ export default function VehiclesPage() {
     e.preventDefault();
     try {
       const token = Cookies.get('admin_token');
-      await axios.post('https://cartaxi-backend.onrender.com/api/vehicles', formData, {
+      await axios.post(`${base}/api/vehicles`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFormData({ name: '', type: '' });
@@ -46,7 +47,7 @@ export default function VehiclesPage() {
     if (!confirm('Are you sure you want to deactivate this vehicle?')) return;
     try {
       const token = Cookies.get('admin_token');
-      await axios.delete(`https://cartaxi-backend.onrender.com/api/vehicles/${id}`, {
+      await axios.delete(`${base}/api/vehicles/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchVehicles();
