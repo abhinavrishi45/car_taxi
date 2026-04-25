@@ -7,8 +7,8 @@ const auth = require('../middleware/auth');
 router.get('/', auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
-    // Fetch agents without their passwords
-    const counters = await Agent.find().select('-password');
+    // Fetch agents (include password so admin can view it)
+    const counters = await Agent.find();
     res.json(counters);
   } catch (error) {
     res.status(500).json({ error: error.message });

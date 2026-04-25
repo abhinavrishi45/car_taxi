@@ -50,7 +50,7 @@ export default function AgentsPage() {
     <div>
       <h1 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Create Agent</h1>
 
-      <div className="card" style={{ maxWidth: '680px' }}>
+      <div className="card" style={{ maxWidth: '980px' }}>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Airport Name</label>

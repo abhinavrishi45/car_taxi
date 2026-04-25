@@ -13,7 +13,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://abhinavrishi45.github.io",
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://abhinavrishi45.github.io"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

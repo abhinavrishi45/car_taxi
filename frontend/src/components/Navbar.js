@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import Image from "next/image";
 
 export default function Navbar() {
   const [isAgent, setIsAgent] = useState(false);
@@ -114,8 +115,9 @@ export default function Navbar() {
       backgroundColor: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(10px)',
       position: 'sticky', top: 0, zIndex: 100
     }}>
-      <Link href="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>
-        Cartaxi
+      <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+        <img src={'/public/logo2.jpeg'} alt="" style={{ height: '36px', width: '36px', objectFit: 'cover', borderRadius: '6px' }} />
+        
       </Link>
 
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>

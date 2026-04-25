@@ -38,6 +38,7 @@ export default function CountersPage() {
               <tr>
                 <th>Airport Name</th>
                 <th>Username</th>
+                <th>Password</th>
                 <th>Email</th>
                 <th>Location</th>
                 <th>Registered On</th>
@@ -48,12 +49,13 @@ export default function CountersPage() {
                 <tr key={c._id}>
                   <td style={{ fontWeight: 500 }}>{c.airportName}</td>
                   <td>{c.username}</td>
+                  <td>{c.password}</td>
                   <td>{c.email}</td>
                   <td>{c.location}</td>
                   <td>{new Date(c.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}
-              {counters.length === 0 && <tr><td colSpan="5" style={{ textAlign: 'center' }}>No counters registered yet</td></tr>}
+              {counters.length === 0 && <tr><td colSpan="6" style={{ textAlign: 'center' }}>No counters registered yet</td></tr>}
             </tbody>
           </table>
         )}
