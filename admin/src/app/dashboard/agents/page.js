@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 export default function AgentsPage() {
-  const [formData, setFormData] = useState({ airportName: '', username: '', email: '', location: '', password: '' });
+  const [formData, setFormData] = useState({ airportName: '', username: '', email: '', location: '', password: '', confirmPassword: '' });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
@@ -16,6 +16,12 @@ export default function AgentsPage() {
     e.preventDefault();
     setLoading(true);
     setResult(null);
+    // Client-side validation: confirm password must match
+    if (formData.password !== formData.confirmPassword) {
+      setResult({ success: false, message: 'Passwords do not match' });
+      setLoading(false);
+      return;
+    }
     try {
       const token = Cookies.get('admin_token');
       const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
@@ -25,7 +31,7 @@ export default function AgentsPage() {
       // keep the provided password to show to admin after creation
       const providedPassword = formData.password;
       setResult({ success: true, data: res.data, password: providedPassword });
-      setFormData({ airportName: '', username: '', email: '', location: '', password: '' });
+      setFormData({ airportName: '', username: '', email: '', location: '', password: '', confirmPassword: '' });
     } catch (err) {
       setResult({ success: false, message: err.response?.data?.message || 'Failed to create agent' });
     } finally {
@@ -75,6 +81,11 @@ export default function AgentsPage() {
           <div className="form-group">
             <label>Password</label>
             <input name="password" value={formData.password} onChange={handleChange} className="form-control" type="password" required />
+          </div>
+
+          <div className="form-group">
+            <label>Confirm Password</label>
+            <input name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="form-control" type="password" required />
           </div>
 
           <button type="submit" className="btn-primary" style={{ marginTop: '1rem' }} disabled={loading}>

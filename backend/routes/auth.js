@@ -20,7 +20,18 @@ router.post('/agent/login', async (req, res) => {
     const agent = await Agent.findOne({ username });
     if (!agent) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const isMatch = await bcrypt.compare(password, agent.password);
+    // Try bcrypt compare first (in case password was previously hashed),
+    // then fallback to plain-text comparison so newly created agents
+    // (stored without hashing) can authenticate.
+    let isMatch = false;
+    try {
+      isMatch = await bcrypt.compare(password, agent.password);
+    } catch (e) {
+      isMatch = false;
+    }
+    if (!isMatch) {
+      isMatch = agent.password === password;
+    }
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: agent._id, role: 'agent', airportName: agent.airportName }, JWT_SECRET, { expiresIn: '1d' });
@@ -86,9 +97,8 @@ router.post('/admin/agents', auth, async (req, res) => {
     const existingAgent = await Agent.findOne({ $or: [{ email }, { username }] });
     if (existingAgent) return res.status(400).json({ message: 'Agent already exists' });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newAgent = new Agent({ airportName, username, email, password: hashedPassword, location });
+    // Store agent password as plain-text per admin request (no hashing performed)
+    const newAgent = new Agent({ airportName, username, email, password, location });
     await newAgent.save();
 
     res.status(201).json({

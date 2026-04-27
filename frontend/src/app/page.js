@@ -92,7 +92,8 @@ export default function Home() {
           {[
             { title: 'Lightning Fast Booking', desc: 'Book rides in seconds directly from the counter.' },
             { title: 'Real-time Management', desc: 'Track all your bookings and vehicles in one place.' },
-            { title: 'Instant Invoicing', desc: 'Generate and print receipts for passengers instantly.' }
+            { title: 'Instant Invoicing', desc: 'Generate and print receipts for passengers instantly.' },
+            { title: '24/7 Support', desc: 'Always available to assist agents and passengers.' }
           ].map((feature, i) => (
             <div key={i} ref={addToRefs} className="card" style={{ flex: '1 1 300px', textAlign: 'left' }}>
               <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(37, 99, 235, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
@@ -104,6 +105,39 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <section style={{ padding: '3rem 2rem', background: 'linear-gradient(180deg, rgba(247,250,252,1) 0%, rgba(255,255,255,1) 100%)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.75rem', textAlign: 'center' }}>About Cartaxi</h2>
+          <p style={{ textAlign: 'center', color: 'var(--text-muted)', maxWidth: '820px', margin: '0 auto' }}>
+            Cartaxi is a lightweight counter booking platform built for airports and ground-transport agents. This page introduces the service,
+            explains how agents use the counter interface, and provides quick access to login and admin tools.
+          </p>
+        </div>
+      </section>
+
+      <section style={{ padding: '3rem 2rem' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '0.75rem', textAlign: 'center' }}>How it works</h2>
+          <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>Follow these simple steps at the counter.</p>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {[
+              { title: 'Collect Passenger Info', desc: 'Capture passenger name, flight details, pickup and dropoff information.' },
+              { title: 'Create Booking', desc: 'Choose vehicle type, set fare, confirm payment and generate receipt.' },
+              { title: 'Dispatch & Complete', desc: 'Assign driver, monitor trip status and mark completed when finished.' }
+            ].map((s, idx) => (
+              <div key={idx} className="card" style={{ flex: '1 1 300px', minWidth: '220px', padding: '1rem' }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: 'rgba(99,102,241,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                  <span style={{ fontSize: '1.05rem' }}>{idx + 1}</span>
+                </div>
+                <h4 style={{ marginBottom: '0.5rem', fontWeight: 700 }}>{s.title}</h4>
+                <p style={{ color: 'var(--text-muted)', lineHeight: 1.5 }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }
