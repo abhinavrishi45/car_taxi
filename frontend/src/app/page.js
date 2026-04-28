@@ -58,7 +58,7 @@ export default function Home() {
 
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <Link href="/agent/counter" className="btn-primary" style={{ padding: '0.75rem 1rem' }}>Counter Booking</Link>
-              <Link href="/agent/counter" className="btn-outline" style={{ padding: '0.75rem 1rem' }}>My Bookings</Link>
+              <Link href="/agent/bookings" className="btn-outline" style={{ padding: '0.75rem 1rem' }}>My Bookings</Link>
             </div>
           </div>
         </section>

@@ -116,8 +116,8 @@ export default function Navbar() {
       position: 'sticky', top: 0, zIndex: 100
     }}>
       <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-        <img src={'/public/logo2.jpeg'} alt="" style={{ height: '36px', width: '36px', objectFit: 'cover', borderRadius: '6px' }} />
-        
+        <Image src="/car_taxi/logo2.jpeg" alt="Cartaxi Logo" width={128} height={64} />
+
       </Link>
 
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
@@ -150,7 +150,7 @@ export default function Navbar() {
                   )}
 
                   <div style={{ padding: '8px', textAlign: 'center' }}>
-                    <Link href="/agent/counter" className="btn-primary" style={{ padding: '0.4rem 0.6rem', fontSize: '0.9rem' }}>View All</Link>
+                    <Link href="/agent/bookings" className="btn-primary" style={{ padding: '0.4rem 0.6rem', fontSize: '0.9rem' }}>View All</Link>
                   </div>
                 </div>
               )}
