@@ -143,7 +143,7 @@ export default function Navbar() {
                         </div>
                         <div style={{ textAlign: 'right' }}>
                           <div style={{ fontWeight: 700 }}>₹{b.manualFarePrice}</div>
-                          <button onClick={() => handlePrintBooking(b)} className="btn-outline" style={{ marginTop: '6px', fontSize: '12px' }}>Print</button>
+                          {/* <button onClick={() => handlePrintBooking(b)} className="btn-outline" style={{ marginTop: '6px', fontSize: '12px' }}>Print</button> */}
                         </div>
                       </div>
                     ))
