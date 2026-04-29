@@ -106,7 +106,7 @@ export default function AgentsPage() {
                 <select name="airportSelect" value={isOtherAirport ? '__other' : formData.airportName} onChange={handleChange} className="form-control" required>
                   <option value="">-- Select airport --</option>
                   {airports.map(a => {
-                    const label = `${a.transportName} — ${a.stationName}${a.location ? ' ('+a.location+')' : ''}`;
+                    const label = `${a.transportName} — ${a.stationName}${a.location ? ' (' + a.location + ')' : ''}`;
                     const value = `${a.transportName} - ${a.stationName}`;
                     return <option key={a._id} value={value}>{label}</option>;
                   })}

@@ -68,7 +68,7 @@ export default function AirportsPage() {
       <h1 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Manage Airports</h1>
 
       <div className="card" style={{ maxWidth: 980, padding: '1rem' }}>
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr auto' }}>
+        <form onSubmit={handleSubmit} className="form-grid">
           <div className="form-group">
             <label>Transport / Airways Name</label>
             <input name="transportName" value={form.transportName} onChange={handleChange} className="form-control" required />
@@ -84,8 +84,8 @@ export default function AirportsPage() {
             <input name="location" value={form.location} onChange={handleChange} className="form-control" required />
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'end' }}>
-            <button type="submit" className="btn-primary" disabled={submitting} style={{ marginLeft: '0.5rem' }}>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary" disabled={submitting}>
               {submitting ? 'Adding...' : 'Add Airport'}
             </button>
           </div>
@@ -97,27 +97,27 @@ export default function AirportsPage() {
           </div>
         )}
 
-        <div style={{ marginTop: 18, overflowX: 'auto' }}>
+        <div className="table-responsive" style={{ marginTop: 18 }}>
           {loading ? <p>Loading...</p> : (
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: 8 }}>S.No</th>
-                  <th style={{ textAlign: 'left', padding: 8 }}>Transport / Airways</th>
-                  <th style={{ textAlign: 'left', padding: 8 }}>Station Name</th>
-                  <th style={{ textAlign: 'left', padding: 8 }}>Location</th>
-                  <th style={{ textAlign: 'left', padding: 8 }}>Actions</th>
+                  <th>S.No</th>
+                  <th>Transport / Airways</th>
+                  <th>Station Name</th>
+                  <th>Location</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {airports.map((a, idx) => (
                   <tr key={a._id}>
-                    <td style={{ padding: 8 }}>{idx + 1}</td>
-                    <td style={{ padding: 8, fontWeight: 500 }}>{a.transportName}</td>
-                    <td style={{ padding: 8 }}>{a.stationName}</td>
-                    <td style={{ padding: 8 }}>{a.location}</td>
-                    <td style={{ padding: 8 }}>
-                      <button type="button" className="btn-outline" onClick={() => handleDelete(a._id)} style={{ padding: '0.25rem 0.6rem' }}>Delete</button>
+                    <td>{idx + 1}</td>
+                    <td style={{ fontWeight: 500 }}>{a.transportName}</td>
+                    <td>{a.stationName}</td>
+                    <td>{a.location}</td>
+                    <td>
+                      <button type="button" className="btn-outline" onClick={() => handleDelete(a._id)}>Delete</button>
                     </td>
                   </tr>
                 ))}

@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }) {
       {/* Sidebar */}
       <aside style={{ width: 'var(--sidebar-width)', backgroundColor: 'var(--primary-color)', color: 'white', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '2rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-           <Image src="/car_taxi/admin/logo2.jpeg" alt="Cartaxi Logo" width={178} height={64} />
+          <Image src="/car_taxi/admin/logo2.jpeg" alt="Cartaxi Logo" width={178} height={64} />
         </div>
         <nav style={{ flex: 1, padding: '1rem 0' }}>
           <ul style={{ listStyle: 'none' }}>
