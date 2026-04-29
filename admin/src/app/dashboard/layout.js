@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import Image from "next/image";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function DashboardLayout({ children }) {
     { name: 'Vehicles', path: '/dashboard/vehicles' },
     { name: 'Bookings', path: '/dashboard/bookings' },
     { name: 'Counters', path: '/dashboard/counters' },
+    { name: 'Airports', path: '/dashboard/airports' },
     { name: 'Counters-Creation', path: '/dashboard/agents' },
   ];
 
@@ -39,7 +41,7 @@ export default function DashboardLayout({ children }) {
       {/* Sidebar */}
       <aside style={{ width: 'var(--sidebar-width)', backgroundColor: 'var(--primary-color)', color: 'white', display: 'flex', flexDirection: 'column' }}>
         <div style={{ padding: '2rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Cartaxi Admin</h2>
+           <Image src="/car_taxi/admin/logo2.jpeg" alt="Cartaxi Logo" width={178} height={64} />
         </div>
         <nav style={{ flex: 1, padding: '1rem 0' }}>
           <ul style={{ listStyle: 'none' }}>

@@ -2,7 +2,11 @@
 const nextConfig = {
   /* config options here */
   output: "export",
-  basePath: "/car_taxi/admin"
+  basePath: "/car_taxi/admin",
+   images: {
+    unoptimized: true,
+  }
+
 };
 
 export default nextConfig;

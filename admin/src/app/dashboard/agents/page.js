@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
@@ -10,28 +10,67 @@ export default function AgentsPage() {
   const [result, setResult] = useState(null);
   const [copySuccess, setCopySuccess] = useState('');
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [airports, setAirports] = useState([]);
+  const [airportsLoading, setAirportsLoading] = useState(true);
+  const [isOtherAirport, setIsOtherAirport] = useState(false);
+
+  const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
+
+  useEffect(() => {
+    const fetchAirports = async () => {
+      try {
+        const token = Cookies.get('admin_token');
+        const res = await axios.get(`${base}/api/airports`, { headers: { Authorization: `Bearer ${token}` } });
+        setAirports(res.data || []);
+      } catch (err) {
+        console.error('Failed to fetch airports', err);
+      } finally {
+        setAirportsLoading(false);
+      }
+    };
+    fetchAirports();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'airportSelect') {
+      if (value === '__other') {
+        setIsOtherAirport(true);
+        setFormData({ ...formData, airportName: '' });
+      } else {
+        setIsOtherAirport(false);
+        setFormData({ ...formData, airportName: value });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setResult(null);
-    // Client-side validation: confirm password must match
+
     if (formData.password !== formData.confirmPassword) {
       setResult({ success: false, message: 'Passwords do not match' });
       setLoading(false);
       return;
     }
+    if (!formData.airportName) {
+      setResult({ success: false, message: 'Please select or enter an airport' });
+      setLoading(false);
+      return;
+    }
+
     try {
       const token = Cookies.get('admin_token');
-      const base = process.env.NEXT_PUBLIC_API_URL || 'https://cartaxi-backend.onrender.com';
       const res = await axios.post(`${base}/api/auth/admin/agents`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // keep the provided password to show to admin after creation
       const providedPassword = formData.password;
       setResult({ success: true, data: res.data, password: providedPassword });
       setFormData({ airportName: '', username: '', email: '', location: '', password: '', confirmPassword: '' });
+      setIsOtherAirport(false);
     } catch (err) {
       setResult({ success: false, message: err.response?.data?.message || 'Failed to create agent' });
     } finally {
@@ -59,8 +98,27 @@ export default function AgentsPage() {
       <div className="card" style={{ maxWidth: '980px' }}>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Airport Name</label>
-            <input name="airportName" value={formData.airportName} onChange={handleChange} className="form-control" required />
+            <label>Airport</label>
+            {airportsLoading ? (
+              <div>Loading airports...</div>
+            ) : airports.length > 0 ? (
+              <div>
+                <select name="airportSelect" value={isOtherAirport ? '__other' : formData.airportName} onChange={handleChange} className="form-control" required>
+                  <option value="">-- Select airport --</option>
+                  {airports.map(a => {
+                    const label = `${a.transportName} — ${a.stationName}${a.location ? ' ('+a.location+')' : ''}`;
+                    const value = `${a.transportName} - ${a.stationName}`;
+                    return <option key={a._id} value={value}>{label}</option>;
+                  })}
+                  <option value="__other">Other (enter manually)</option>
+                </select>
+                {isOtherAirport && (
+                  <input name="airportName" value={formData.airportName} onChange={handleChange} className="form-control" placeholder="Enter airport name" style={{ marginTop: 8 }} required />
+                )}
+              </div>
+            ) : (
+              <input name="airportName" value={formData.airportName} onChange={handleChange} className="form-control" placeholder="Enter airport name" required />
+            )}
           </div>
 
           <div className="form-group">

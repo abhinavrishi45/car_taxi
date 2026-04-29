@@ -45,6 +45,9 @@ try {
 
   app.use('/api/counters', require('./routes/counters'));
   console.log("Counters route loaded");
+  
+  app.use('/api/airports', require('./routes/airports'));
+  console.log("Airports route loaded");
 
 } catch (err) {
   console.error("Route loading error:", err);
