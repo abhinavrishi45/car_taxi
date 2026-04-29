@@ -81,7 +81,7 @@ button {
 }
 
 .card {
-  /* background: white; */
+  background: white;
   border-radius: 1rem;
   box-shadow: var(--shadow-sm);
   padding: 2rem;
