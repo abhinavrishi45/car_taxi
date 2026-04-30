@@ -6,7 +6,7 @@ const auth = require('../middleware/auth');
 // Public: list published locations
 router.get('/public', async (req, res) => {
   try {
-    const list = await Location.findAll({ where: { isPublished: true }, order: [['createdAt', 'DESC']] });
+    const list = await Location.find({ isPublished: true }).sort({ createdAt: -1 });
     return res.json(list);
   } catch (err) {
     return res.status(500).json({ error: err.message || err });
@@ -17,7 +17,7 @@ router.get('/public', async (req, res) => {
 router.get('/', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
-    const list = await Location.findAll({ order: [['createdAt', 'DESC']] });
+    const list = await Location.find().sort({ createdAt: -1 });
     return res.json(list);
   } catch (err) {
     return res.status(500).json({ error: err.message || err });
@@ -29,7 +29,7 @@ router.get('/:id', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
     const { id } = req.params;
-    const rec = await Location.findByPk(id);
+    const rec = await Location.findById(id);
     if (!rec) return res.status(404).json({ message: 'Not found' });
     return res.json(rec);
   } catch (err) {
@@ -55,9 +55,8 @@ router.put('/:id', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
     const { id } = req.params;
-    const rec = await Location.findByPk(id);
+    const rec = await Location.findByIdAndUpdate(id, req.body || {}, { new: true });
     if (!rec) return res.status(404).json({ message: 'Not found' });
-    await rec.update(req.body || {});
     return res.json(rec);
   } catch (err) {
     return res.status(500).json({ error: err.message || err });
@@ -70,10 +69,8 @@ router.patch('/:id/publish', auth, async (req, res) => {
     if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
     const { id } = req.params;
     const { publish } = req.body;
-    const rec = await Location.findByPk(id);
+    const rec = await Location.findByIdAndUpdate(id, { isPublished: !!publish }, { new: true });
     if (!rec) return res.status(404).json({ message: 'Not found' });
-    rec.isPublished = !!publish;
-    await rec.save();
     return res.json(rec);
   } catch (err) {
     return res.status(500).json({ error: err.message || err });
@@ -85,9 +82,8 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
     const { id } = req.params;
-    const rec = await Location.findByPk(id);
+    const rec = await Location.findByIdAndDelete(id);
     if (!rec) return res.status(404).json({ message: 'Not found' });
-    await rec.destroy();
     return res.json({ message: 'Deleted' });
   } catch (err) {
     return res.status(500).json({ error: err.message || err });

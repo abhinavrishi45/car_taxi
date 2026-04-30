@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Cookies from 'js-cookie';
-import { useRouter  } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import gsap from 'gsap';
 import Navbar from '@/components/Navbar';
@@ -10,20 +10,24 @@ import Link from 'next/link';
 
 export default function Home() {
   const router = useRouter();
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || '';
   const heroRef = useRef(null);
-  const [agent, setAgent] = useState(null);
+  const [agent, setAgent] = useState(() => {
+    try {
+      const token = Cookies.get('agent_token');
+      const agentStr = Cookies.get('agent_data');
+      if (token && agentStr) return JSON.parse(agentStr);
+      return null;
+    } catch (e) {
+      return null;
+    }
+  });
   const textRef = useRef(null);
   const cardsRef = useRef([]);
   useEffect(() => {
-    // If agent is logged in (agent_token + agent_data), show inline dashboard
-    const token = Cookies.get('agent_token');
-    const agentStr = Cookies.get('agent_data');
-    if (token && agentStr) {
-      try { setAgent(JSON.parse(agentStr)); } catch (e) { setAgent(null); }
-      return; // skip hero animations
-    }
+    // If agent is logged in, skip hero animations
+    if (agent) return;
 
-    // otherwise continue with hero animations
     const ctx = gsap.context(() => {
       // Hero Animation
       gsap.fromTo(textRef.current.children,
@@ -39,16 +43,29 @@ export default function Home() {
     }, heroRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [agent]);
 
   const addToRefs = (el) => {
     if (el && !cardsRef.current.includes(el)) {
       cardsRef.current.push(el);
     }
   };
-   const mapRef = useRef(null);
+  const mapRef = useRef(null);
   const [mapsLoaded, setMapsLoaded] = useState(false);
   const [publicLocations, setPublicLocations] = useState(null);
+
+  const safeParse = (value, fallback) => {
+    if (!value) return fallback;
+    try {
+      const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+      return Array.isArray(parsed) ? parsed : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  };
+
+  // Optional server-provided page data fallback (may be injected by server in some setups)
+  const apiData = (typeof window !== 'undefined' && window.apiData) ? window.apiData : null;
 
   const mapLocations = useMemo(() => {
     // Allow backend to provide `serviceLocations` as JSON; fallback to defaults
@@ -66,7 +83,7 @@ export default function Home() {
     if (apiData?.serviceLocations) return safeParse(apiData.serviceLocations, defaults);
     if (publicLocations && Array.isArray(publicLocations)) return safeParse(publicLocations, defaults);
     return defaults;
-  }, [apiData?.serviceLocations, publicLocations]);
+  }, [publicLocations]);
 
   // fetch public locations if not provided in frontpage data
   useEffect(() => {
@@ -84,7 +101,7 @@ export default function Home() {
       }
     };
     fetchPublic();
-  }, [apiData?.serviceLocations]);
+  }, [API_BASE]);
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -115,7 +132,7 @@ export default function Home() {
         if (!mounted) return;
         const g = window.google;
         mapInstance = new g.maps.Map(mapRef.current, {
-         center: { lat: 20.5937, lng: 78.9629 }, 
+          center: { lat: 20.5937, lng: 78.9629 },
           zoom: 4.5,
           disableDefaultUI: true,
           styles: [
@@ -268,28 +285,30 @@ export default function Home() {
         </div>
       </section>
 
-       <section className="section-responsive px-6 md:px-16 py-24 md:py-15 bg-white" id="service-location-sec">
-          <div className="max-w-7xl mx-auto">
-            <div className="section-label">Our Service Location</div>
-            <h2 className="playfair text-4xl md:text-5xl font-bold leading-tight text-slate-900 mb-8">
-              Where We Ship
-            </h2>
+      <section className="section-responsive px-6 md:px-16 py-24 md:py-15 bg-white" id="service-location-sec">
+        <div className="max-w-7xl mx-auto">
 
-            <div className="map-wrapper relative rounded-lg p-6 bg-slate-50">
-              <style>{`
-                .gm-map { width: 100%; height: 650px; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(10,22,40,.06); }
+
+
+          <div className="map-wrapper relative rounded-lg p-6 bg-slate-50">
+            <style>{`
+                .gm-map { width: 100%; max-width: 1100px; margin: 0 auto; height: 650px; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(10,22,40,.06); }
                 .locations-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; font-size:13px; color:var(--gray); }
                 .locations-list .loc { display:inline-flex; gap:8px; align-items:center; padding:8px 12px; background:#fff; border:1px solid var(--border); border-radius:9999px; }
-                @media (max-width:900px){ .gm-map{height:300px} }
+                @media (max-width:900px){ .gm-map{height:300px; max-width:100%;} }
               `}</style>
 
-              <div ref={mapRef} id="gm-map" className="gm-map" />
+            <div ref={mapRef} id="gm-map" className="gm-map" />
 
-             
-            </div>
 
           </div>
-        </section>
+
+        </div>
+      </section>
+
+      <footer style={{ background: '#0b57d0', color: '#ffffff', textAlign: 'center', padding: '1rem 0', marginTop: '2rem' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>© {new Date().getFullYear()} Cartaxi</div>
+      </footer>
 
     </main>
   );
