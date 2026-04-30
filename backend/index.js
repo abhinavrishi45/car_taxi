@@ -49,6 +49,12 @@ try {
   app.use('/api/airports', require('./routes/airports'));
   console.log("Airports route loaded");
 
+  // const locationRoutes = require('./routes/locationRoutes');
+  // app.use('/api/locations', locationRoutes);
+
+  app.use('/api/locations', require('./routes/locationRoutes'));
+  console.log("Location routes loaded");
+
 } catch (err) {
   console.error("Route loading error:", err);
   process.exit(1);
